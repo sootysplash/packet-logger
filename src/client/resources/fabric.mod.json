@@ -1,30 +1,30 @@
 {
 	"schemaVersion": 1,
-	"id": "optimaleat",
+	"id": "packet-logger",
 	"version": "1.0",
-	"name": "Optimal Eat",
-	"description": "Automatically stops eating when you've fully used an item to minimize eating slowdown.",
+	"name": "Packet logger",
+	"description": "Tracks what packets you receive and send, then saves all of it to a file!",
 	"authors": [
 		"Sootysplash"
 	],
 	"contact": {
 		"homepage": "https://github.com/sootysplash",
-		"sources": "https://github.com/sootysplash/optimal-eat"
+		"sources": "https://github.com/sootysplash/packet-logger"
 	},
 	"license": "Apache-2.0",
-	"icon": "assets/optimal-eat/icon.png",
+	"icon": "assets/packet-logger/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"client": [
-			"me.sootysplash.MainOE"
+			"me.sootysplash.MainPL"
 		],
 		"modmenu": [
-			"me.sootysplash.ModMenuOE"
+			"me.sootysplash.ModMenuPL"
 		]
 	},
 	"mixins": [
 		{
-			"config": "optimal-eat.client.mixins.json",
+			"config": "packet-logger.client.mixins.json",
 			"environment": "client"
 		}
 	],
