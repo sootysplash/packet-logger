@@ -12,24 +12,33 @@ import java.nio.file.Path;
 import static com.mojang.text2speech.Narrator.LOGGER;
 
 
-@me.shedaniel.autoconfig.annotation.Config(name = "OptimalEat")
+@me.shedaniel.autoconfig.annotation.Config(name = "PacketLogger")
 public class ConfigPL implements ConfigData {
 
     //Andy is the goat https://github.com/AndyRusso/pvplegacyutils/blob/main/src/main/java/io/github/andyrusso/pvplegacyutils/PvPLegacyUtilsConfig.java
 
-    private static final Path file = FabricLoader.getInstance().getConfigDir().resolve("OptimalEat.json");
+    private static final Path file = FabricLoader.getInstance().getConfigDir().resolve("PacketLogger.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static ConfigPL instance;
 
     public boolean incoming = true;
     public boolean outgoing = true;
+    public boolean pingPong = true;
+    public boolean playerMove = true;
+    public boolean chunkData = true;
+    public boolean blockData = true;
+    public boolean healthUpdate = true;
+
+    public boolean clickSlot = true;
+    public boolean selectSlot = true;
+    public boolean interactEntity = true;
 
     public static ConfigPL getInstance() {
         if (instance == null) {
             try {
                 instance = GSON.fromJson(Files.readString(file), ConfigPL.class);
             } catch (IOException exception) {
-                LOGGER.warn("OptimalEat couldn't load the config, using defaults.");
+                LOGGER.warn("PacketLogger couldn't load the config, using defaults.");
                 instance = new ConfigPL();
             }
         }
@@ -41,7 +50,7 @@ public class ConfigPL implements ConfigData {
         try {
             Files.writeString(file, GSON.toJson(this));
         } catch (IOException e) {
-            LOGGER.error("OptimalEat could not save the config.");
+            LOGGER.error("PacketLogger could not save the config.");
             throw new RuntimeException(e);
         }
     }

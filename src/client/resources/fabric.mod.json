@@ -22,6 +22,7 @@
 			"me.sootysplash.ModMenuPL"
 		]
 	},
+	"accessWidener": "packet-logger.accesswidener",
 	"mixins": [
 		{
 			"config": "packet-logger.client.mixins.json",

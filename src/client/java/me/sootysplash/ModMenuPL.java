@@ -33,6 +33,52 @@ public class ModMenuPL implements ModMenuApi {
                     .setSaveConsumer(newValue -> config.outgoing = newValue)
                     .build());
 
+            ConfigCategory packetblacklist = builder.getOrCreateCategory(Text.of("Packet Blacklist"));
+            ConfigEntryBuilder packet = builder.entryBuilder();
+
+            packetblacklist.addEntry(packet.startBooleanToggle(Text.of("Skip Ping and Pong packets"), config.pingPong)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> config.pingPong = newValue)
+                    .build());
+
+            packetblacklist.addEntry(packet.startBooleanToggle(Text.of("Skip PlayerMove packets"), config.playerMove)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> config.playerMove = newValue)
+                    .build());
+
+            packetblacklist.addEntry(packet.startBooleanToggle(Text.of("Skip ChunkData packets"), config.chunkData)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> config.chunkData = newValue)
+                    .build());
+
+            packetblacklist.addEntry(packet.startBooleanToggle(Text.of("Skip BlockUpdate packets"), config.blockData)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> config.blockData = newValue)
+                    .build());
+
+            packetblacklist.addEntry(packet.startBooleanToggle(Text.of("Skip HealthUpdate packets"), config.healthUpdate)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> config.healthUpdate = newValue)
+                    .build());
+
+            ConfigCategory packetData = builder.getOrCreateCategory(Text.of("Packet Data"));
+            ConfigEntryBuilder data = builder.entryBuilder();
+
+            packetData.addEntry(data.startBooleanToggle(Text.of("Extra ClickSlot packet data"), config.clickSlot)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> config.clickSlot = newValue)
+                    .build());
+
+            packetData.addEntry(data.startBooleanToggle(Text.of("Extra UpdateSlot packet data"), config.selectSlot)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> config.selectSlot = newValue)
+                    .build());
+
+            packetData.addEntry(data.startBooleanToggle(Text.of("Extra InteractEntity packet data"), config.interactEntity)
+                    .setDefaultValue(true)
+                    .setSaveConsumer(newValue -> config.interactEntity = newValue)
+                    .build());
+
             return builder.build();
         };
     }
