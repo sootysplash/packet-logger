@@ -39,12 +39,12 @@ public class MainPL implements ClientModInitializer {
 
         String name = packet.getClass().getName();
         name = name.substring(name.lastIndexOf('.') + 1);
-        String str = String.format("[%s] %s %s", getCurrentTimeStamp(), incoming ? "INC" : "SEND", name);
+        String str = String.format("[%s] %s %s", getCurrentHourStamp(), incoming ? "INC" : "SEND", name);
 
         if(config.packetData) {
 
             if (packet instanceof ClickSlotC2SPacket cs) {
-                str = str.concat(String.format(" Slot: %s, Stack: %s, Action: %s", cs.getSlot(), cs.getStack(), cs.getActionType().name()));
+                str = str.concat(String.format(" Slot: %s, Stack: %s, Action: %s, Sync: %s", cs.getSlot(), cs.getStack(), cs.getActionType().name(), cs.getSyncId()));
             }
 
             if (packet instanceof UpdateSelectedSlotC2SPacket us) {
@@ -66,7 +66,7 @@ public class MainPL implements ClientModInitializer {
             }
 
             if (packet instanceof CraftRequestC2SPacket cr) {
-                str = str.concat(String.format(" Recipe: %s", cr.getRecipe()));
+                str = str.concat(String.format(" Recipe: %s, Sync: %s", cr.getRecipe(), cr.getSyncId()));
             }
 
             if (packet instanceof PlayerInteractItemC2SPacket pii) {
@@ -78,7 +78,7 @@ public class MainPL implements ClientModInitializer {
             }
 
             if (packet instanceof SlotChangedStateC2SPacket scs) {
-                str = str.concat(String.format(" Slot: %s, NewState: %b", scs.slotId(), scs.newState()));
+                str = str.concat(String.format(" Slot: %s, NewState: %b, Sync: %s", scs.slotId(), scs.newState(), scs.screenHandlerId()));
             }
 
             if (packet instanceof CustomPayloadC2SPacket cp) {
@@ -175,6 +175,11 @@ public class MainPL implements ClientModInitializer {
 
     public static String getCurrentTimeStamp() {
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        return sdfDate.format(now);
+    }
+    public static String getCurrentHourStamp() {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("HH:mm:ss");
         Date now = new Date();
         return sdfDate.format(now);
     }
