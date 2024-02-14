@@ -16,9 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientConnection.class)
 public class ClientConnectionMixin {
-    @Shadow
-    @Final
-    private NetworkSide side;
+
+    @Shadow @Final private NetworkSide side;
 
     @Inject(method = "handlePacket", at = @At("HEAD"))
     private static <T extends PacketListener> void hookEventPacketReceive(Packet<T> packet, PacketListener listener, CallbackInfo callback) {
@@ -36,4 +35,5 @@ public class ClientConnectionMixin {
     private void hookDisconnect(Text disconnectReason, CallbackInfo ci) {
         MainPL.dump();
     }
+
 }
