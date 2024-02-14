@@ -64,19 +64,9 @@ public class ModMenuPL implements ModMenuApi {
             ConfigCategory packetData = builder.getOrCreateCategory(Text.of("Packet Data"));
             ConfigEntryBuilder data = builder.entryBuilder();
 
-            packetData.addEntry(data.startBooleanToggle(Text.of("Extra ClickSlot packet data"), config.clickSlot)
+            packetData.addEntry(data.startBooleanToggle(Text.of("Extra Outgoing Packet Data"), config.packetData)
                     .setDefaultValue(true)
-                    .setSaveConsumer(newValue -> config.clickSlot = newValue)
-                    .build());
-
-            packetData.addEntry(data.startBooleanToggle(Text.of("Extra UpdateSlot packet data"), config.selectSlot)
-                    .setDefaultValue(true)
-                    .setSaveConsumer(newValue -> config.selectSlot = newValue)
-                    .build());
-
-            packetData.addEntry(data.startBooleanToggle(Text.of("Extra InteractEntity packet data"), config.interactEntity)
-                    .setDefaultValue(true)
-                    .setSaveConsumer(newValue -> config.interactEntity = newValue)
+                    .setSaveConsumer(newValue -> config.packetData = newValue)
                     .build());
 
             return builder.build();

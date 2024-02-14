@@ -29,9 +29,7 @@ public class ConfigPL implements ConfigData {
     public boolean blockData = true;
     public boolean healthUpdate = true;
 
-    public boolean clickSlot = true;
-    public boolean selectSlot = true;
-    public boolean interactEntity = true;
+    public boolean packetData = true;
 
     public static ConfigPL getInstance() {
         if (instance == null) {

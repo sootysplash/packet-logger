@@ -5,13 +5,13 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.c2s.common.ClientOptionsC2SPacket;
 import net.minecraft.network.packet.c2s.common.CommonPongC2SPacket;
-import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
+import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.c2s.play.*;
 import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
@@ -39,18 +39,87 @@ public class MainPL implements ClientModInitializer {
         name = name.substring(name.lastIndexOf('.') + 1);
         String str = String.format("[%s] %s %s", getCurrentTimeStamp(), incoming ? "INC" : "SEND", name);
 
-        if(packet instanceof ClickSlotC2SPacket cs && config.clickSlot){
-            str = str.concat(String.format(" Slot: %s, Stack: %s, Action: %s", cs.getSlot(), cs.getStack(), cs.getActionType().name()));
-        }
+        if(config.packetData) {
 
-        if(packet instanceof UpdateSelectedSlotC2SPacket us && config.selectSlot){
-            str = str.concat(String.format(" Slot: %s", us.getSelectedSlot()));
-        }
+            if (packet instanceof ClickSlotC2SPacket cs) {
+                str = str.concat(String.format(" Slot: %s, Stack: %s, Action: %s", cs.getSlot(), cs.getStack(), cs.getActionType().name()));
+            }
 
-        if(packet instanceof PlayerInteractEntityC2SPacket pie && config.interactEntity && MinecraftClient.getInstance().world != null){
-            Entity e = MinecraftClient.getInstance().world.getEntityById(pie.entityId);
-            String eName = e == null ? "null" : e.getName().getLiteralString();
-            str = str.concat(String.format(" Entity: %s, Sneaking: %b",  eName, pie.isPlayerSneaking()));
+            if (packet instanceof UpdateSelectedSlotC2SPacket us) {
+                str = str.concat(String.format(" Slot: %s", us.getSelectedSlot()));
+            }
+
+            if (packet instanceof PlayerInteractEntityC2SPacket pie && MinecraftClient.getInstance().world != null) {
+                Entity e = MinecraftClient.getInstance().world.getEntityById(pie.entityId);
+                String eName = e == null ? "null" : e.getName().getLiteralString();
+                str = str.concat(String.format(" Entity: %s, Sneaking: %b", eName, pie.isPlayerSneaking()));
+            }
+
+            if (packet instanceof ClientStatusC2SPacket cs) {
+                str = str.concat(String.format(" Action: %s", cs.getMode().name()));
+            }
+
+            if (packet instanceof ChatMessageC2SPacket cm) {
+                str = str.concat(String.format(" Message: %s", cm.chatMessage()));
+            }
+
+            if (packet instanceof CraftRequestC2SPacket cr) {
+                str = str.concat(String.format(" Recipe: %s", cr.getRecipe()));
+            }
+
+            if (packet instanceof PlayerInteractItemC2SPacket pii) {
+                str = str.concat(String.format(" Hand: %s", pii.getHand().name()));
+            }
+
+            if (packet instanceof PickFromInventoryC2SPacket pfi) {
+                str = str.concat(String.format(" Slot: %s", pfi.getSlot()));
+            }
+
+            if (packet instanceof SlotChangedStateC2SPacket scs) {
+                str = str.concat(String.format(" Slot: %s, NewState: %b", scs.slotId(), scs.newState()));
+            }
+
+            if (packet instanceof CustomPayloadC2SPacket cp) {
+                str = str.concat(String.format(" Payload: %s", cp.payload().id()));
+            }
+
+            if (packet instanceof CommandExecutionC2SPacket ce) {
+                str = str.concat(String.format(" Command: %s", ce.command()));
+            }
+
+            if (packet instanceof PlayerInteractBlockC2SPacket pib) {
+                str = str.concat(String.format(" Hand: %s, HitResult: %s", pib.getHand(), pib.getBlockHitResult().toString()));
+            }
+
+            if (packet instanceof ClientOptionsC2SPacket co) {
+                str = str.concat(String.format(" Options: %s", co.options().toString()));
+            }
+
+            if (packet instanceof HandSwingC2SPacket hs) {
+                str = str.concat(String.format(" Hand: %s", hs.getHand()));
+            }
+
+            if (packet instanceof PlayerInputC2SPacket pi) {
+                str = str.concat(String.format(" Forward: %s, Sideways: %s, Jumping: %s, Sneaking: %s", pi.getForward(), pi.getSideways(), pi.isJumping(), pi.isSneaking()));
+            }
+
+            if (packet instanceof PlayerActionC2SPacket pa) {
+                str = str.concat(String.format(" Action: %s, Direction: %s, Position: %s", pa.getAction().name(), pa.getDirection().getName(), pa.getPos()));
+            }
+
+            ClientPlayerEntity p = MinecraftClient.getInstance().player;
+            if (packet instanceof PlayerMoveC2SPacket pm && p != null) {
+                str = str.concat(String.format(" Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s, Ground: %s", pm.getPitch(p.getPitch()), pm.getYaw(p.getYaw()), pm.getX(p.getX()), pm.getY(p.getY()), pm.getZ(p.getZ()), pm.isOnGround()));
+            }
+
+            if (packet instanceof VehicleMoveC2SPacket vm && p != null) {
+                str = str.concat(String.format(" Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s", vm.getPitch(), vm.getYaw(), vm.getX(), vm.getY(), vm.getZ()));
+            }
+
+            if (packet instanceof UpdatePlayerAbilitiesC2SPacket upa) {
+                str = str.concat(String.format(" Flying: %s", upa.isFlying()));
+            }
+
         }
 
 
