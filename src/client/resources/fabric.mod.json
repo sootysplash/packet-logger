@@ -17,9 +17,6 @@
 	"entrypoints": {
 		"client": [
 			"me.sootysplash.MainPL"
-		],
-		"modmenu": [
-			"me.sootysplash.ModMenuPL"
 		]
 	},
 	"accessWidener": "packet-logger.accesswidener",
