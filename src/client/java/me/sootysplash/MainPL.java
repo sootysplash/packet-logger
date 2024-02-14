@@ -123,6 +123,10 @@ public class MainPL implements ClientModInitializer {
                 str = str.concat(String.format(" Flying: %s", upa.isFlying()));
             }
 
+            if (packet instanceof CloseHandledScreenC2SPacket chs) {
+                str = str.concat(String.format(" Sync: %s", chs.getSyncId()));
+            }
+
         }
 
 
