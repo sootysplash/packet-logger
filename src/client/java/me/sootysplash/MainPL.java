@@ -17,9 +17,11 @@ import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.network.packet.s2c.play.HealthUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.UnloadChunkS2CPacket;
+import net.minecraft.util.hit.BlockHitResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -88,7 +90,8 @@ public class MainPL implements ClientModInitializer {
             }
 
             if (packet instanceof PlayerInteractBlockC2SPacket pib) {
-                str = str.concat(String.format(" Hand: %s, HitResult: %s", pib.getHand(), pib.getBlockHitResult().toString()));
+                BlockHitResult bhr = pib.getBlockHitResult();
+                str = str.concat(String.format(" Hand: %s, Pos: %s, Side: %s, BlockPos: %s", pib.getHand(), bhr.getPos(), bhr.getSide(), bhr.getBlockPos()));
             }
 
             if (packet instanceof ClientOptionsC2SPacket co) {
@@ -154,15 +157,18 @@ public class MainPL implements ClientModInitializer {
         if (packets.size() < 12)
             return;
 
-        Path file = FabricLoader.getInstance().getGameDir().resolve(String.format("packets-%s.json", getCurrentTimeStamp()));
-        try {
-            Files.write(file, packets);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        File newDirectory = new File(FabricLoader.getInstance().getGameDir().toString(), "packet-logs");
+        if(newDirectory.mkdir() || newDirectory.exists()) {
+            Path file = FabricLoader.getInstance().getGameDir().resolve("packet-logs").resolve(String.format("packets-%s.json", getCurrentTimeStamp()));
+            try {
+                Files.write(file, packets);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
-        synchronized (packets) {
-            packets.clear();
+            synchronized (packets) {
+                packets.clear();
+            }
         }
 
     }
