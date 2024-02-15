@@ -46,7 +46,7 @@ public class MainPL implements ClientModInitializer {
 
         if (packet instanceof PlayerInteractEntityC2SPacket pie && MinecraftClient.getInstance().world != null) {
             Entity e = MinecraftClient.getInstance().world.getEntityById(pie.entityId);
-            String eName = e == null ? "null" : e.getName().getLiteralString();
+            String eName = e == null ? "null" : String.valueOf(e.getName());
             str = str.concat(String.format("PlayerInteractEntity Entity: %s, Sneaking: %b", eName, pie.isPlayerSneaking()));
         }
 
