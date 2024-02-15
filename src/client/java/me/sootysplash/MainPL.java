@@ -107,10 +107,14 @@ public class MainPL implements ClientModInitializer {
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
         if (packet instanceof PlayerMoveC2SPacket pm && p != null) {
             str = str.concat(String.format("PlayerMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s, Ground: %s, ChangesLook: %b, ChangesPos: %b", round(pm.getPitch(p.getPitch())), round(pm.getYaw(p.getYaw())), round(pm.getX(p.getX())), round(pm.getY(p.getY())), round(pm.getZ(p.getZ())), pm.isOnGround(), pm.changesLook(), pm.changesPosition()));
+            if(config.playerMove)
+                return;
         }
 
         if (packet instanceof VehicleMoveC2SPacket vm && p != null) {
             str = str.concat(String.format("VehicleMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s", round(vm.getPitch()), round(vm.getYaw()), round(vm.getX()), round(vm.getY()), round(vm.getZ())));
+            if(config.playerMove)
+                return;
         }
 
 
