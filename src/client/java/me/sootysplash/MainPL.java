@@ -8,8 +8,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.c2s.common.CommonPongC2SPacket;
 import net.minecraft.network.packet.c2s.play.*;
-import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
@@ -57,7 +57,7 @@ public class MainPL implements ClientModInitializer {
                 str = str.concat(String.format("ChatMessage Message: %s", cm.chatMessage()));
             }
 
-            if (packet instanceof CommonPingS2CPacket cp) {
+            if (packet instanceof CommonPongC2SPacket cp) {
                 str = str.concat(String.format("CommonPing Parameter: %s", cp.getParameter()));
                 if (config.pingPong)
                     return;
