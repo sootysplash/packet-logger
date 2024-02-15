@@ -13,6 +13,7 @@ import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.c2s.play.*;
 import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,11 +84,6 @@ public class MainPL implements ClientModInitializer {
             str = str.concat(String.format("CommandExecution Command: %s", ce.command()));
         }
 
-        if (packet instanceof PlayerInteractBlockC2SPacket pib) {
-            BlockHitResult bhr = pib.getBlockHitResult();
-            str = str.concat(String.format("PlayerInteractBlock Hand: %s, Pos: %s, Side: %s, BlockPos: %s", pib.getHand(), bhr.getPos(), bhr.getSide(), bhr.getBlockPos()));
-        }
-
         if (packet instanceof ClientOptionsC2SPacket co) {
             str = str.concat(String.format("ClientOptions Options: %s", co.options().toString()));
         }
@@ -103,19 +99,20 @@ public class MainPL implements ClientModInitializer {
         if (packet instanceof PlayerActionC2SPacket pa) {
             str = str.concat(String.format("PlayerAction Action: %s, Direction: %s, Position: %s", pa.getAction().name(), pa.getDirection().getName(), pa.getPos()));
         }
+        if (packet instanceof PlayerInteractBlockC2SPacket pib) {
+            BlockHitResult bhr = pib.getBlockHitResult();
+            str = str.concat(String.format("PlayerInteractBlock Hand: %s, Pos: %s, Side: %s, BlockPos: %s", pib.getHand(), new Vec3d(round(bhr.getPos().x), round(bhr.getPos().y), round(bhr.getPos().z)), bhr.getSide(), bhr.getBlockPos()));
+        }
 
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
         if (packet instanceof PlayerMoveC2SPacket pm && p != null) {
-            str = str.concat(String.format("PlayerMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s, Ground: %s, ChangesLook: %b, ChangesPos: %b", pm.getPitch(p.getPitch()), pm.getYaw(p.getYaw()), pm.getX(p.getX()), pm.getY(p.getY()), pm.getZ(p.getZ()), pm.isOnGround(), pm.changesLook(), pm.changesPosition()));
-            if(config.playerMove)
-                return;
+            str = str.concat(String.format("PlayerMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s, Ground: %s, ChangesLook: %b, ChangesPos: %b", round(pm.getPitch(p.getPitch())), round(pm.getYaw(p.getYaw())), round(pm.getX(p.getX())), round(pm.getY(p.getY())), round(pm.getZ(p.getZ())), pm.isOnGround(), pm.changesLook(), pm.changesPosition()));
         }
 
         if (packet instanceof VehicleMoveC2SPacket vm && p != null) {
-            str = str.concat(String.format("VehicleMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s", vm.getPitch(), vm.getYaw(), vm.getX(), vm.getY(), vm.getZ()));
-            if(config.playerMove)
-                return;
+            str = str.concat(String.format("VehicleMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s", round(vm.getPitch()), round(vm.getYaw()), round(vm.getX()), round(vm.getY()), round(vm.getZ())));
         }
+
 
         if (packet instanceof UpdatePlayerAbilitiesC2SPacket upa) {
             str = str.concat(String.format("UpdatePlayerAbilities Flying: %s", upa.isFlying()));
@@ -132,6 +129,10 @@ public class MainPL implements ClientModInitializer {
             packets.add(str);
         }
     }
+
+private static double round(double toRound){
+    return Math.round(toRound * 100.0) / 100.0;
+}
 
     public static void dump() {
         // hacky solution
