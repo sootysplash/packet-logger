@@ -77,10 +77,6 @@ public class MainPL implements ClientModInitializer {
                 str = str.concat(String.format(" Slot: %s", pfi.getSlot()));
             }
 
-            if (packet instanceof SlotChangedStateC2SPacket scs) {
-                str = str.concat(String.format(" Slot: %s, NewState: %b, Sync: %s", scs.slotId(), scs.newState(), scs.screenHandlerId()));
-            }
-
             if (packet instanceof CustomPayloadC2SPacket cp) {
                 str = str.concat(String.format(" Payload: %s", cp.payload().id()));
             }
