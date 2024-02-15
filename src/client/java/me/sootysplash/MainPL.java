@@ -32,101 +32,101 @@ public class MainPL implements ClientModInitializer {
 
     public static void addPacket(Packet<?> packet, boolean incoming) {
 
-        ConfigPL config = ConfigPL.getInstance();
-        String str = String.format("[%s] %s ", getCurrentHourStamp(), incoming ? "INC" : "SEND");
-        String check = str;
+        try {
+            ConfigPL config = ConfigPL.getInstance();
+            String str = String.format("[%s] %s ", getCurrentHourStamp(), incoming ? "INC" : "SEND");
+            String check = str;
 
-        if (packet instanceof ClickSlotC2SPacket cs) {
-            str = str.concat(String.format("ClickSlot Slot: %s, Stack: %s, Action: %s, Sync: %s", cs.getSlot(), cs.getStack(), cs.getActionType().name(), cs.getSyncId()));
-        }
+            if (packet instanceof ClickSlotC2SPacket cs) {
+                str = str.concat(String.format("ClickSlot Slot: %s, Stack: %s, Action: %s, Sync: %s", cs.getSlot(), cs.getStack(), cs.getActionType().name(), cs.getSyncId()));
+            }
 
-        if (packet instanceof UpdateSelectedSlotC2SPacket us) {
-            str = str.concat(String.format("UpdateSelectedSlot Slot: %s", us.getSelectedSlot()));
-        }
+            if (packet instanceof UpdateSelectedSlotC2SPacket us) {
+                str = str.concat(String.format("UpdateSelectedSlot Slot: %s", us.getSelectedSlot()));
+            }
 
-        if (packet instanceof PlayerInteractEntityC2SPacket pie && MinecraftClient.getInstance().world != null) {
-            Entity e = MinecraftClient.getInstance().world.getEntityById(pie.entityId);
-            String eName = e == null ? "null" : String.valueOf(e.getName());
-            str = str.concat(String.format("PlayerInteractEntity Entity: %s, Sneaking: %b", eName, pie.isPlayerSneaking()));
-        }
+            if (packet instanceof PlayerInteractEntityC2SPacket pie && MinecraftClient.getInstance().world != null) {
+                Entity e = MinecraftClient.getInstance().world.getEntityById(pie.entityId);
+                String eName = e == null ? "null" : String.valueOf(e.getName());
+                str = str.concat(String.format("PlayerInteractEntity Entity: %s, Sneaking: %b", eName, pie.isPlayerSneaking()));
+            }
 
-        if (packet instanceof ClientStatusC2SPacket cs) {
-            str = str.concat(String.format("ClientStatus Action: %s", cs.getMode().name()));
-        }
+            if (packet instanceof ClientStatusC2SPacket cs) {
+                str = str.concat(String.format("ClientStatus Action: %s", cs.getMode().name()));
+            }
 
-        if (packet instanceof ChatMessageC2SPacket cm) {
-            str = str.concat(String.format("ChatMessage Message: %s", cm.chatMessage()));
-        }
+            if (packet instanceof ChatMessageC2SPacket cm) {
+                str = str.concat(String.format("ChatMessage Message: %s", cm.chatMessage()));
+            }
 
-        if (packet instanceof CommonPingS2CPacket cp) {
-            str = str.concat(String.format("CommonPing Parameter: %s", cp.getParameter()));
-            if(config.pingPong)
+            if (packet instanceof CommonPingS2CPacket cp) {
+                str = str.concat(String.format("CommonPing Parameter: %s", cp.getParameter()));
+                if (config.pingPong)
+                    return;
+            }
+
+            if (packet instanceof CraftRequestC2SPacket cr) {
+                str = str.concat(String.format("CraftRequest Recipe: %s, Sync: %s", cr.getRecipe(), cr.getSyncId()));
+            }
+
+            if (packet instanceof PlayerInteractItemC2SPacket pii) {
+                str = str.concat(String.format("PlayerInteractItem Hand: %s", pii.getHand().name()));
+            }
+
+            if (packet instanceof PickFromInventoryC2SPacket pfi) {
+                str = str.concat(String.format("PickFromInventory Slot: %s", pfi.getSlot()));
+            }
+
+            if (packet instanceof CommandExecutionC2SPacket ce) {
+                str = str.concat(String.format("CommandExecution Command: %s", ce.command()));
+            }
+
+            if (packet instanceof HandSwingC2SPacket hs) {
+                str = str.concat(String.format("HandSwing Hand: %s", hs.getHand()));
+            }
+
+            if (packet instanceof PlayerInputC2SPacket pi) {
+                str = str.concat(String.format("PlayerInput Forward: %s, Sideways: %s, Jumping: %s, Sneaking: %s", pi.getForward(), pi.getSideways(), pi.isJumping(), pi.isSneaking()));
+            }
+
+            if (packet instanceof PlayerActionC2SPacket pa) {
+                str = str.concat(String.format("PlayerAction Action: %s, Direction: %s, Position: %s", pa.getAction().name(), pa.getDirection().getName(), pa.getPos()));
+            }
+            if (packet instanceof PlayerInteractBlockC2SPacket pib) {
+                BlockHitResult bhr = pib.getBlockHitResult();
+                str = str.concat(String.format("PlayerInteractBlock Hand: %s, Pos: %s, Side: %s, BlockPos: %s", pib.getHand(), new Vec3d(round(bhr.getPos().x), round(bhr.getPos().y), round(bhr.getPos().z)), bhr.getSide(), bhr.getBlockPos()));
+            }
+
+            ClientPlayerEntity p = MinecraftClient.getInstance().player;
+            if (packet instanceof PlayerMoveC2SPacket pm && p != null) {
+                str = str.concat(String.format("PlayerMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s, Ground: %s, ChangesLook: %b, ChangesPos: %b", round(pm.getPitch(p.getPitch())), round(pm.getYaw(p.getYaw())), round(pm.getX(p.getX())), round(pm.getY(p.getY())), round(pm.getZ(p.getZ())), pm.isOnGround(), pm.changesLook(), pm.changesPosition()));
+                if (config.playerMove)
+                    return;
+            }
+
+            if (packet instanceof VehicleMoveC2SPacket vm && p != null) {
+                str = str.concat(String.format("VehicleMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s", round(vm.getPitch()), round(vm.getYaw()), round(vm.getX()), round(vm.getY()), round(vm.getZ())));
+                if (config.playerMove)
+                    return;
+            }
+
+
+            if (packet instanceof UpdatePlayerAbilitiesC2SPacket upa) {
+                str = str.concat(String.format("UpdatePlayerAbilities Flying: %s", upa.isFlying()));
+            }
+
+            if (packet instanceof CloseHandledScreenC2SPacket chs) {
+                str = str.concat(String.format("CloseHandledScreen Sync: %s", chs.getSyncId()));
+            }
+
+            if (check.equals(str))
                 return;
-        }
 
-        if (packet instanceof CraftRequestC2SPacket cr) {
-            str = str.concat(String.format("CraftRequest Recipe: %s, Sync: %s", cr.getRecipe(), cr.getSyncId()));
-        }
-
-        if (packet instanceof PlayerInteractItemC2SPacket pii) {
-            str = str.concat(String.format("PlayerInteractItem Hand: %s", pii.getHand().name()));
-        }
-
-        if (packet instanceof PickFromInventoryC2SPacket pfi) {
-            str = str.concat(String.format("PickFromInventory Slot: %s", pfi.getSlot()));
-        }
-
-        if (packet instanceof CustomPayloadC2SPacket cp) {
-            str = str.concat(String.format("CustomPayload Payload: %s", cp.payload()));
-        }
-
-        if (packet instanceof CommandExecutionC2SPacket ce) {
-            str = str.concat(String.format("CommandExecution Command: %s", ce.command()));
-        }
-
-        if (packet instanceof HandSwingC2SPacket hs) {
-            str = str.concat(String.format("HandSwing Hand: %s", hs.getHand()));
-        }
-
-        if (packet instanceof PlayerInputC2SPacket pi) {
-            str = str.concat(String.format("PlayerInput Forward: %s, Sideways: %s, Jumping: %s, Sneaking: %s", pi.getForward(), pi.getSideways(), pi.isJumping(), pi.isSneaking()));
-        }
-
-        if (packet instanceof PlayerActionC2SPacket pa) {
-            str = str.concat(String.format("PlayerAction Action: %s, Direction: %s, Position: %s", pa.getAction().name(), pa.getDirection().getName(), pa.getPos()));
-        }
-        if (packet instanceof PlayerInteractBlockC2SPacket pib) {
-            BlockHitResult bhr = pib.getBlockHitResult();
-            str = str.concat(String.format("PlayerInteractBlock Hand: %s, Pos: %s, Side: %s, BlockPos: %s", pib.getHand(), new Vec3d(round(bhr.getPos().x), round(bhr.getPos().y), round(bhr.getPos().z)), bhr.getSide(), bhr.getBlockPos()));
-        }
-
-        ClientPlayerEntity p = MinecraftClient.getInstance().player;
-        if (packet instanceof PlayerMoveC2SPacket pm && p != null) {
-            str = str.concat(String.format("PlayerMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s, Ground: %s, ChangesLook: %b, ChangesPos: %b", round(pm.getPitch(p.getPitch())), round(pm.getYaw(p.getYaw())), round(pm.getX(p.getX())), round(pm.getY(p.getY())), round(pm.getZ(p.getZ())), pm.isOnGround(), pm.changesLook(), pm.changesPosition()));
-            if(config.playerMove)
-                return;
-        }
-
-        if (packet instanceof VehicleMoveC2SPacket vm && p != null) {
-            str = str.concat(String.format("VehicleMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s", round(vm.getPitch()), round(vm.getYaw()), round(vm.getX()), round(vm.getY()), round(vm.getZ())));
-            if(config.playerMove)
-                return;
-        }
-
-
-        if (packet instanceof UpdatePlayerAbilitiesC2SPacket upa) {
-            str = str.concat(String.format("UpdatePlayerAbilities Flying: %s", upa.isFlying()));
-        }
-
-        if (packet instanceof CloseHandledScreenC2SPacket chs) {
-            str = str.concat(String.format("CloseHandledScreen Sync: %s", chs.getSyncId()));
-        }
-
-        if(check.equals(str))
-            return;
-
-        synchronized (packets) {
-            packets.add(str);
+            synchronized (packets) {
+                packets.add(str);
+            }
+        } catch (Exception e){
+            LOGGER.error(e + " " + e.getMessage());
         }
     }
 
