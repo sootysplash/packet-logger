@@ -84,10 +84,6 @@ public class MainPL implements ClientModInitializer {
             str = str.concat(String.format("CommandExecution Command: %s", ce.command()));
         }
 
-        if (packet instanceof ClientOptionsC2SPacket co) {
-            str = str.concat(String.format("ClientOptions Options: %s", co.options().toString()));
-        }
-
         if (packet instanceof HandSwingC2SPacket hs) {
             str = str.concat(String.format("HandSwing Hand: %s", hs.getHand()));
         }
