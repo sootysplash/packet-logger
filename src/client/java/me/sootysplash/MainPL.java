@@ -9,6 +9,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.common.ClientOptionsC2SPacket;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.c2s.play.*;
+import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
 import net.minecraft.util.hit.BlockHitResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,10 @@ public class MainPL implements ClientModInitializer {
 
         if (packet instanceof ClientStatusC2SPacket cs) {
             str = str.concat(String.format("ClientStatus Action: %s", cs.getMode().name()));
+        }
+
+        if (packet instanceof CommonPingS2CPacket cp) {
+            str = str.concat(String.format("CommonPing Parameter: %s", cp.getParameter()));
         }
 
         if (packet instanceof ChatMessageC2SPacket cm) {
