@@ -6,7 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.common.ClientOptionsC2SPacket;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.c2s.play.*;
 import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
@@ -43,7 +42,7 @@ public class MainPL implements ClientModInitializer {
 
         if (packet instanceof PlayerInteractEntityC2SPacket pie && MinecraftClient.getInstance().world != null) {
             Entity e = MinecraftClient.getInstance().world.getEntityById(pie.entityId);
-            String eName = e == null ? "null" : e.getName().getLiteralString();
+            String eName = e == null ? "null" : String.valueOf(e.getName());
             str = str.concat(String.format("PlayerInteractEntity Entity: %s, Sneaking: %b", eName, pie.isPlayerSneaking()));
         }
 
@@ -77,10 +76,6 @@ public class MainPL implements ClientModInitializer {
 
         if (packet instanceof CommandExecutionC2SPacket ce) {
             str = str.concat(String.format("CommandExecution Command: %s", ce.command()));
-        }
-
-        if (packet instanceof ClientOptionsC2SPacket co) {
-            str = str.concat(String.format("ClientOptions Options: %s", co.options().toString()));
         }
 
         if (packet instanceof HandSwingC2SPacket hs) {
@@ -131,7 +126,7 @@ public class MainPL implements ClientModInitializer {
 
     public static void dump() {
         // hacky solution
-        if (packets.size() < 12)
+        if (packets.size() < 15)
             return;
 
         File newDirectory = new File(FabricLoader.getInstance().getGameDir().toString(), "packet-logs");
