@@ -11,6 +11,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.common.ClientOptionsC2SPacket;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.c2s.play.*;
+import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
 import net.minecraft.util.hit.BlockHitResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ public class MainPL implements ClientModInitializer {
 
     public static void addPacket(Packet<?> packet, boolean incoming) {
 
+        ConfigPL config = ConfigPL.getInstance();
         String str = String.format("[%s] %s ", getCurrentHourStamp(), incoming ? "INC" : "SEND");
         String check = str;
 
@@ -53,6 +55,12 @@ public class MainPL implements ClientModInitializer {
 
         if (packet instanceof ChatMessageC2SPacket cm) {
             str = str.concat(String.format("ChatMessage Message: %s", cm.chatMessage()));
+        }
+
+        if (packet instanceof CommonPingS2CPacket cp) {
+            str = str.concat(String.format("CommonPing Parameter: %s", cp.getParameter()));
+            if(config.pingPong)
+                return;
         }
 
         if (packet instanceof CraftRequestC2SPacket cr) {
@@ -99,10 +107,14 @@ public class MainPL implements ClientModInitializer {
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
         if (packet instanceof PlayerMoveC2SPacket pm && p != null) {
             str = str.concat(String.format("PlayerMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s, Ground: %s, ChangesLook: %b, ChangesPos: %b", pm.getPitch(p.getPitch()), pm.getYaw(p.getYaw()), pm.getX(p.getX()), pm.getY(p.getY()), pm.getZ(p.getZ()), pm.isOnGround(), pm.changesLook(), pm.changesPosition()));
+            if(config.playerMove)
+                return;
         }
 
         if (packet instanceof VehicleMoveC2SPacket vm && p != null) {
             str = str.concat(String.format("VehicleMove Pitch: %s, Yaw: %s, X: %s, Y: %s, Z: %s", vm.getPitch(), vm.getYaw(), vm.getX(), vm.getY(), vm.getZ()));
+            if(config.playerMove)
+                return;
         }
 
         if (packet instanceof UpdatePlayerAbilitiesC2SPacket upa) {

@@ -20,16 +20,8 @@ public class ConfigPL implements ConfigData {
     private static final Path file = FabricLoader.getInstance().getConfigDir().resolve("PacketLogger.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static ConfigPL instance;
-
-    public boolean incoming = true;
-    public boolean outgoing = true;
     public boolean pingPong = true;
     public boolean playerMove = true;
-    public boolean chunkData = true;
-    public boolean blockData = true;
-    public boolean healthUpdate = true;
-
-    public boolean packetData = true;
 
     public static ConfigPL getInstance() {
         if (instance == null) {
