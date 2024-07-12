@@ -154,13 +154,13 @@ private static double round(double toRound){
     }
 
     public static String getCurrentTimeStamp() {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         Date now = new Date();
         return sdfDate.format(now);
     }
 
     public static String getCurrentHourStamp() {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("HH-mm-ss");
         Date now = new Date();
         return sdfDate.format(now);
     }
