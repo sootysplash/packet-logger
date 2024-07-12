@@ -134,7 +134,7 @@ public class MainPL implements ClientModInitializer {
             try {
                 Files.write(file, packets);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
 
             synchronized (packets) {
