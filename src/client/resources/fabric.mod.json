@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "packet-logger",
+	"version": "1.0",
+	"name": "Packet logger",
+	"description": "Tracks what packets you receive and send, then saves all of it to a file!",
+	"authors": [
+		"Sootysplash"
+	],
+	"contact": {
+		"homepage": "https://github.com/sootysplash",
+		"sources": "https://github.com/sootysplash/packet-logger"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/packet-logger/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			"me.sootysplash.MainPL"
+		]
+	},
+	"accessWidener": "packet-logger.accesswidener",
+	"mixins": [
+		{
+			"config": "packet-logger.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.14.0",
+		"minecraft": ">=1.19.2",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
