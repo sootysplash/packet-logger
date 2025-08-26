@@ -128,7 +128,6 @@ public class MainPL implements ClientModInitializer {
                         || packet instanceof KeepAliveS2CPacket) {
 
                 } else {
-                    PlayerActionResponseS2CPacket
                     MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(packet.getClass().getSimpleName()));
                 }
             }
